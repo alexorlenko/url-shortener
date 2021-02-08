@@ -6,6 +6,9 @@ import java.net.URISyntaxException;
 
 public interface UrlShortenerService {
 
-    public URI getUrl(String key) throws MalformedURLException, URISyntaxException;
-    public URI saveUrl(String url) throws MalformedURLException, URISyntaxException;
+    URI find(String key) throws MalformedURLException, URISyntaxException;
+
+    URI create(String url) throws MalformedURLException, URISyntaxException;
+
+    void delete(String key);
 }
