@@ -38,7 +38,7 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
     public URI find(String key) throws URISyntaxException {
         String uri = database.get(key);
         if (uri == null) return null;
-        LOGGER.info("Entry found: {}", uri);
+        LOGGER.info("Entry found: [{}]", uri);
         return new URI(uri);
     }
 
@@ -58,11 +58,10 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
             //UUID is used as it a universal identifier with the ability to randomly generate characters
             key = UUID.randomUUID().toString().substring(0, 4);
             //Try to create URI from Url to check if it's eligible or throw Exception
-            URI uri = new URI(url);
-            database.put(key, String.valueOf(uri));
-            LOGGER.info("New key created: {}", key);
+            database.put(key, String.valueOf(new URI(url)));
+            LOGGER.info("New key created: [{}]", key);
         } else {
-            LOGGER.info("Key found in database: {}", key);
+            LOGGER.info("Key found in database: [{}]", key);
         }
         return new URI(String.format("%s/%s", BASE_URL, key));
     }
@@ -75,7 +74,12 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
      */
     @Override
     public void delete(String key) {
-        database.remove(key);
+        if (database.get(key) != null) {
+            database.remove(key);
+            LOGGER.info("Record with [{}] key removed", key);
+        } else {
+            LOGGER.info("Record with [{}] key not found", key);
+        }
     }
 
     /**
